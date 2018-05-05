@@ -16,12 +16,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-        client = new Client();
+        client = new Client(this);
     }
 
     public void testButton(View view)
     {
-        Button button = (Button) findViewById(R.id.test_button);
+        //Button button = (Button) findViewById(R.id.test_button);
+
+        client.sendTestMessage();
+
     }
+
+
 
 }
