@@ -51,12 +51,15 @@ public class Client {
 
     private void initSocket() throws IOException {
         //String IP = "10.9.133.81";
+        Log.e(TAG, "Initialising socket");
 
         InetAddress adr = InetAddress.getByName(IP);
 
         socket = new Socket(adr, 4444);
-        os = new ObjectOutputStream(socket.getOutputStream());
-        is = new ObjectInputStream(socket.getInputStream());
+        if((os = new ObjectOutputStream(socket.getOutputStream())) == null)
+            Log.e(TAG, "OS is null");
+        if((is = new ObjectInputStream(socket.getInputStream())) == null)
+            Log.e(TAG, "IS is null");
         socketInitalised = true;
     }
 
@@ -68,8 +71,8 @@ public class Client {
         // get IMEI Permission
         if (ActivityCompat.checkSelfPermission(context,Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions((Activity)context, new String[]{Manifest.permission.READ_PHONE_STATE}, 0);
-            //initPlayerID();
-            //return;
+            initPlayerID();
+            return;
         }
 
         playerID = tm.getDeviceId();
@@ -90,7 +93,8 @@ public class Client {
         {
             public void run() {
                 try {
-                    if(!socketInitalised) initSocket();
+                    if(!socketInitalised)
+                        Log.e(TAG, "Socket not initialised");
                     System.out.println(message.getPlayerID());
                     os.writeObject(message);
                     os.flush(); // Send off the data
